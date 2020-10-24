@@ -6,7 +6,7 @@ AllCops:
     - "node_modules/**/*" # rubocop config/default.yml
     - "vendor/**/*" # rubocop config/default.yml
     - "db/schema.rb"
-
+    - "app/models/user.rb"
 #################### Layout ################################
 
 # メソッドをグループ分けして書き順を揃えておくと読みやすくなる。
@@ -425,4 +425,8 @@ Style/HashTransformValues:
 # 1行目にいきなりclass ~~ と書き始めると怒られる
 # missing top-level class documentation comment の除外
 Style/Documentation:
+  Enabled: false
+
+#
+Style/FrozenStringLiteralComment:
   Enabled: false
