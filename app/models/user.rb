@@ -42,5 +42,5 @@ class User < ActiveRecord::Base
   has_many :comments, dependent: :destroy
   has_many :article_likes, dependent: :destroy
 
-  validate :name, presence: true, uniqueness: { case_sensitive: false }
+  # validate :name, presence: true, uniqueness: { case_sensitive: false }
 end

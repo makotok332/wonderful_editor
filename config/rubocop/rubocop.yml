@@ -436,5 +436,5 @@ Style/FrozenStringLiteralComment:
   Enabled: false
 
 # コンマを追加しても消してもでるので除外
-Layout/ExtraSpacing:
-  Enabled: false
+# Layout/ExtraSpacing:
+#   Enabled: false
