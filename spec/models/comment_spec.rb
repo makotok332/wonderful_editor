@@ -22,5 +22,18 @@
 require "rails_helper"
 
 RSpec.describe Comment, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  context "コメントが入力されている" do
+    let(:comment){build(:comment)}
+    it "コメントが作成される" do
+      expect(comment).to be_valid
+    end
+  end
+
+  context "コメントが入力されていない" do
+    let(:comment){build(:comment, body: nil)}
+    it "コメントの作成に失敗する" do
+      expect(comment).not_to be_valid
+    end
+end
+
 end
