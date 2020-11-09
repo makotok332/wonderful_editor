@@ -22,7 +22,7 @@ require "rails_helper"
 RSpec.describe Article, type: :model do
   context "タイトルと記事が入力されている" do
     let(:article){build(:article)}
-    fit "記事が作成される" do
+    it "記事が作成される" do
       binding.pry
       expect(article).to be_valid
     end
@@ -35,5 +35,5 @@ RSpec.describe Article, type: :model do
     end
   end
 
-
 end
+

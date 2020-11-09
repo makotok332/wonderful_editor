@@ -1,0 +1,2 @@
+class ArticlePreviewsController < ApplicationController
+end
