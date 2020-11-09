@@ -11,6 +11,8 @@ AllCops:
     - "spec/models/article_like_spec.rb"
     - "spec/models/article_spec.rb"
     - "spec/models/comment_spec.rb"
+    - "db/migrate/20201105171712_create_article_previews.rb"
+    - "spec/requests/api/v1/articles_request_spec.rb"
 #################### Layout ################################
 
 # メソッドをグループ分けして書き順を揃えておくと読みやすくなる。
