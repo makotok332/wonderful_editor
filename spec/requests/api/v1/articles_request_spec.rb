@@ -112,7 +112,6 @@ RSpec.describe "Api::V1::Articles", type: :request do
       let!(:article){create(:article, user: current_user)}
       it "ユーザーの記事を削除できる"do
     expect { subject }.to change { Article.count }.by(-1)
-    expect (response).to have_http_status(:no_content)
       end
     end
     context "ログインしていないユーザーが記事を削除しようとするとき" do
