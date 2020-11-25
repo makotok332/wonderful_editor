@@ -62,7 +62,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
     end
   end
 
-  describe "POST /articles" do
+  describe "POST /article" do
     subject { post(api_v1_articles_path, params: params ) }
     context "適切なパラメーターを送信したとき" do
       let(:params) { { article: attributes_for(:article)} }
@@ -78,4 +78,50 @@ RSpec.describe "Api::V1::Articles", type: :request do
       end
     end
   end
+
+  describe "PATCH(PUT) /article/:id" do
+    subject { patch(api_v1_article_path(article_id), params: params ) }
+      let(:article_id){article.id}
+      let(:params) { { article: attributes_for(:article)} }
+      let(:current_user) { create(:user) }
+      before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+    context "ユーザーの既存の記事を更新するとき" do
+        let(:article){create(:article, user: current_user)}
+      it "ユーザーの記事を更新できる" do
+        expect {subject}.to change {Article.find(article_id).title}.from(article.title).to(params[:article][:title]) &
+                            change {Article.find(article_id).body}.from(article.body).to(params[:article][:body])
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context "ログインしていないユーザーが記事の更新をしようとするとき" do
+      let(:other_user) { create(:user) }
+      let(:article){create(:article, user: other_user)}
+      it "記事の更新に失敗する" do
+        expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
+
+  describe "DELETE /article/:id" do
+    subject { delete(api_v1_article_path(article_id)) }
+      let(:article_id){article.id}
+      let(:current_user) { create(:user) }
+    before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+    context "ユーザーの既存の記事を削除するとき" do
+      let!(:article){create(:article, user: current_user)}
+      it "ユーザーの記事を削除できる"do
+    expect { subject }.to change { Article.count }.by(-1)
+      end
+    end
+    context "ログインしていないユーザーが記事を削除しようとするとき" do
+      let(:other_user) { create(:user) }
+      let!(:article){create(:article, user: other_user)}
+      it "記事の削除に失敗する" do
+        expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+  end
+
 end

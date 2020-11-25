@@ -23,7 +23,6 @@ RSpec.describe Article, type: :model do
   context "タイトルと記事が入力されている" do
     let(:article){build(:article)}
     it "記事が作成される" do
-      binding.pry
       expect(article).to be_valid
     end
   end
@@ -36,5 +35,3 @@ RSpec.describe Article, type: :model do
   end
 
 end
-
-
