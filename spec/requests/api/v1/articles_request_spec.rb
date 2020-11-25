@@ -119,8 +119,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
       let(:other_user) { create(:user) }
       let!(:article){create(:article, user: other_user)}
       it "記事の削除に失敗する" do
-        expect { subject }.to raise_error(ActiveRecord::RecordNotFound) &
-        
+        expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
 
