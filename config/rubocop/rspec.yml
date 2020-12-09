@@ -72,8 +72,3 @@ RSpec/NestedGroups:
 RSpec/ReturnFromStub:
   Enabled: false
 
-RSpec/AnyInstance:
-  Enabled: false
-
-RSpec/LetSetup:
-  Enabled: false
