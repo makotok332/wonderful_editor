@@ -44,7 +44,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
       let(:article_id) { 100000 }
       it "記事が見つからない" do
         subject
-        expect(response).to have_http_status(401)
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end
