@@ -43,8 +43,7 @@ RSpec.describe "Api::V1::Articles", type: :request do
     context "指定したidの記事が存在しないとき" do
       let(:article_id) { 100000 }
       it "記事が見つからない" do
-        subject
-        expect(response).to have_http_status(:unauthorized)
+        expect { subject }.to raise_error ActiveRecord::RecordNotFound
       end
     end
   end
