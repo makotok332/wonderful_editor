@@ -37,7 +37,7 @@ RSpec.describe Article, type: :model do
 
   context "statusがdraftのとき"do
     let(:article){build(:article, :draft)}
-    fit "記事が下書きで作成される" do
+    it "記事が下書きで作成される" do
       expect(article).to be_valid
       expect(article.status).to eq "draft"
     end
