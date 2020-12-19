@@ -4,9 +4,9 @@ RSpec.describe "Api::V1::Articles", type: :request do
   describe "GET /articles" do
     subject { get(api_v1_articles_path) }
 
-    let!(:article1) { create(:article, updated_at: 1.days.ago) }
-    let!(:article2) { create(:article, updated_at: 2.days.ago) }
-    let!(:article3) { create(:article) }
+    let!(:article1) { create(:article, :published, updated_at: 1.days.ago) }
+    let!(:article2) { create(:article, :published, updated_at: 2.days.ago) }
+    let!(:article3) { create(:article, :published) }
 
     it "記事の一覧が取得できる" do
       subject
@@ -23,9 +23,9 @@ RSpec.describe "Api::V1::Articles", type: :request do
   describe "GET /articles/:id" do
     subject { get(api_v1_article_path(article_id)) }
 
-    context "指定したidの記事が存在するとき" do
+    context "指定したidの記事が公開中で存在するとき" do
       let(:article_id) { article.id }
-      let(:article) { create(:article) }
+      let(:article) { create(:article, :published) }
 
       it "その記事の詳細を表示できる" do
         subject
@@ -40,6 +40,14 @@ RSpec.describe "Api::V1::Articles", type: :request do
       end
     end
 
+    context "指定した記事が非公開のとき" do
+      let(:article_id) { article.id }
+      let(:article) { create(:article, :draft) }
+      it "記事が見つからない" do
+        expect { subject }.to raise_error ActiveRecord::RecordNotFound
+      end
+    end
+
     context "指定したidの記事が存在しないとき" do
       let(:article_id) { 100000 }
       it "記事が見つからない" do
@@ -51,9 +59,9 @@ RSpec.describe "Api::V1::Articles", type: :request do
   describe "POST /article" do
     subject { post(api_v1_articles_path, params: params, headers: headers) }
 
-    context "適切なパラメーターを送信したとき" do
+    context "公開指定で適切なパラメーターを送信したとき" do
       let(:headers) { current_user.create_new_auth_token }
-      let(:params) { { article: attributes_for(:article) } }
+      let(:params) { { article: attributes_for(:article, :published) } }
       let(:current_user) { create(:user) }
 
       it "ユーザーの記事を作成できる" do
@@ -61,6 +69,21 @@ RSpec.describe "Api::V1::Articles", type: :request do
         res = JSON.parse(response.body)
         expect(res["title"]).to eq params[:article][:title]
         expect(res["body"]).to eq params[:article][:body]
+        expect(res["status"]).to eq "published"
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context "下書き指定で適切なパラメーターを送信したとき" do
+      let(:headers) { current_user.create_new_auth_token }
+      let(:params) { { article: attributes_for(:article, :draft) } }
+      let(:current_user) { create(:user) }
+      it "ユーザーの記事を下書きで作成できる" do
+        expect { subject }.to change { Article.where(user_id: current_user.id).count }.by(1)
+        res = JSON.parse(response.body)
+        expect(res["title"]).to eq params[:article][:title]
+        expect(res["body"]).to eq params[:article][:body]
+        expect(res["status"]).to eq "draft"
         expect(response).to have_http_status(:ok)
       end
     end
