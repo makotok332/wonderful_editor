@@ -5,19 +5,18 @@ RSpec.describe "Api::V1::Auth::Registrations", type: :request do
     subject { post(api_v1_user_registration_path, params: params) }
 
     context "適切なパラメーターを送信したとき" do
-      let(:params) { { user: attributes_for(:user) } }
+      let(:params) { attributes_for(:user) }
 
       it "ユーザーの新規登録できる" do
         expect { subject }.to change { User.count }.by(1)
         expect(response).to have_http_status(:ok)
         res = JSON.parse(response.body)
-        expect(res["data"]["name"]).to eq params[:user][:name]
-        expect(res["data"]["email"]).to eq params[:user][:email]
+        expect(res["data"]["email"]).to eq(User.last.email)
       end
     end
 
     context "nameがないとき" do
-      let(:params) { { user: attributes_for(:user, name: nil) } }
+      let(:params) { attributes_for(:user, name: nil) }
 
       it "エラーする" do
         expect { subject }.to change { User.count }.by(0)
@@ -28,7 +27,7 @@ RSpec.describe "Api::V1::Auth::Registrations", type: :request do
     end
 
     context "emailがないとき" do
-      let(:params) { { user: attributes_for(:user, email: nil) } }
+      let(:params) { attributes_for(:user, email: nil) }
 
       it "エラーする" do
         expect { subject }.to change { User.count }.by(0)
@@ -39,7 +38,7 @@ RSpec.describe "Api::V1::Auth::Registrations", type: :request do
     end
 
     context "passwordがないとき" do
-      let(:params) { { user: attributes_for(:user, password: nil) } }
+      let(:params) { attributes_for(:user, password: nil) }
 
       it "エラーする" do
         expect { subject }.to change { User.count }.by(0)
